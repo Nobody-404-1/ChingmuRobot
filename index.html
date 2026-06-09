@@ -24,17 +24,18 @@ img, video { display: block; max-width: 100%; }       /* 图片/视频块状显�
 
 /* ===== 顶部固定导航栏 ===== */
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 250;   /* 固定在顶部，层级最高 */
-  background: rgba(0,103,158,.95); backdrop-filter: blur(10px); /* 毛玻璃效果 */
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;   /* 固定在顶部，层级最高 */
+  background: rgba(0,108,255,.95); backdrop-filter: blur(10px); /* 毛玻璃效果 */
   border-bottom: 1px solid rgba(59, 130, 246, 0.5);
   display: flex; align-items: center; justify-content: space-between;
-  padding: .65rem 2rem;
-  font-size: .85rem; letter-spacing: .02em;
+  padding: 1rem 2rem;
+  font-size: .9rem; letter-spacing: .02em;
   color: #ffffff;
+  height: 64px;
 }
-.nav-brand { font-weight: 700; font-size: .95rem; color: #ffffff;}   /* 左侧品牌名称 */
+.nav-brand { font-weight: 700; font-size: 1rem; color: #ffffff;}   /* 左侧品牌名称 */
 .nav-links { display: flex; gap: 1.4rem; }            /* 导航链接水平排列 */
-.nav-links a { color: rgba(255, 255, 255, 0.9); transition: color .15s; }
+.nav-links a { color: rgba(255, 255, 255, 0.9); transition: color .15s; font-size: .9rem; padding: 4px 0;}
 .nav-links a:hover { color: #ffffff; }
 
 /* ===== HERO 首屏区域 ===== */
@@ -43,6 +44,8 @@ nav {
   display: flex; align-items: center; justify-content: center;
   text-align: center; overflow: hidden;
   color: #fff;
+  padding-top: 64px; /* 与导航栏高度一致 */
+  box-sizing: border-box;
 }
 /* 背景视频：绝对定位铺满，作为首屏背景 */
 .hero-bg-video {
