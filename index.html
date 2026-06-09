@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ChingMu 1000-Hour Embodied Motion Dataset</title>
+<meta name="description" content="ChingMu 1000-Hour Embodied Motion Dataset — 面向人形机器人、灵巧手、具身AI和虚拟制作的高精度多模态动作数据。" />
+
+<style>
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Inter', 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+  color: #1a1a1a; background: #ffffff; line-height: 1.7; -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img, video { display: block; max-width: 100%; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+  border-bottom: 1px solid #eee;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: .65rem 2rem;
+  font-size: .85rem; letter-spacing: .02em;
+}
+.nav-brand { font-weight: 700; font-size: .95rem; }
+.nav-links { display: flex; gap: 1.4rem; }
+.nav-links a { color: #555; transition: color .15s; }
+.nav-links a:hover { color: #000; }
+
+/* ===== HERO ===== */
+.hero {
+  position: relative; min-height: 100svh;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden;
+  color: #fff;
+}
+/* 背景：优先视频，fallback 用深色渐变 */
+.hero-bg-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+.hero::after {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.72) 100%);
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 860px; padding: 2rem 1.5rem;
+}
+.hero-badge {
+  display: inline-block;
+  border: 1px solid rgba(255,255,255,.45); border-radius: 999px;
+  padding: .25rem .9rem; font-size: .78rem; letter-spacing: .06em; text-transform: uppercase;
+  margin-bottom: 1.1rem; opacity: .9;
+}
+.hero h1 {
+  font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800;
+  line-height: 1.18; margin-bottom: .6rem;
+}
+.hero h1 span { display: block; font-weight: 400; font-size: .46em; opacity: .82; margin-top: .35rem; letter-spacing: .01em; }
+.hero-sub {
+  font-size: 1rem; opacity: .88; max-width: 600px; margin: 0 auto 1.6rem; line-height: 1.65;
+}
+.hero-stats {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .9rem;
+  margin-bottom: 1.8rem;
+}
+.hero-stat {
+  background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+  border-radius: 10px; padding: .65rem 1.1rem; min-width: 140px;
+  text-align: center;
+}
+.hero-stat .num { font-size: 1.35rem; font-weight: 800; }
+.hero-stat .lbl { font-size: .75rem; opacity: .8; margin-top: .15rem; }
+.hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: .45rem;
+  padding: .7rem 1.5rem; border-radius: 8px; font-weight: 600; font-size: .92rem;
+  cursor: pointer; transition: transform .12s, box-shadow .2s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn-primary { background: #fff; color: #111; border: none; }
+.btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.55); }
+.btn-outline:hover { border-color: #fff; }
+
+/* ===== SECTIONS ===== */
+section { padding: 5.5rem 1.5rem 5rem; }
+.container { max-width: 1080px; margin: 0 auto; }
+.section-label {
+  font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+  color: #888; margin-bottom: .55rem;
+}
+h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 800; line-height: 1.25; margin-bottom: 1rem; }
+h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: .55rem; }
+p.lead { font-size: 1.08rem; color: #444; max-width: 760px; line-height: 1.75; }
+.center { text-align: center; }
+.center .lead { margin-left: auto; margin-right: auto; }
+
+/* alt bg */
+.bg-light { background: #f8f8fa; }
+
+/* ===== VIDEO CARD (big) ===== */
+.video-block { margin-top: 2.2rem; }
+.video-block video {
+  width: 100%; border-radius: 12px; background: #000; aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+/* ===== GRID CARDS (2-col) ===== */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.6rem; margin-top: 2rem;
+}
+.card {
+  background: #fff; border:1px solid #eee; border-radius: 12px; overflow: hidden;
+  transition: box-shadow .2s;
+}
+.card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.08); }
+.card video {
+  width: 100%; aspect-ratio: 16/9; object-fit: cover; background:#000;
+}
+.card-body { padding: 1rem 1.15rem 1.25rem; }
+.card-body .tag {
+  font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #666; margin-bottom: .35rem;
+}
+.card-body p { font-size: .9rem; color: #555; line-height: 1.6; }
+
+/* ===== PIPELINE ===== */
+.pipeline {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: .4rem; margin: 2rem 0 1rem;
+}
+.pipeline-step {
+  background: #fff; border:1px solid #ddd; border-radius: 10px;
+  padding: .7rem 1.1rem; font-size: .88rem; font-weight: 600; white-space: nowrap;
+  text-align:center; line-height:1.4;
+}
+.pipeline-arrow { color:#bbb; font-size:1.2rem; }
+
+/* ===== STAT ROW ===== */
+.stat-row {
+  display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 1.8rem;
+}
+.stat-box {
+  flex: 1 1 160px; min-width: 150px;
+  background:#fff; border:1px solid #eee; border-radius:12px;
+  padding:1.2rem 1.3rem;
+}
+.stat-box .val { font-size:1.7rem; font-weight:800; color:#111; }
+.stat-box .desc { font-size:.82rem; color:#666; margin-top:.2rem; }
+
+/* ===== FOOTER ===== */
+footer {
+  background:#111; color:#aaa; font-size:.8rem;
+  padding:2.5rem 1.5rem; text-align:center; line-height:1.7;
+}
+footer a { color:#ccc; text-decoration:underline; }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){
+  nav { padding:.55rem 1rem; }
+  .nav-links { gap:.8rem; font-size:.78rem; }
+  section { padding:4rem 1rem 3.5rem; }
+}
+</style>
+
+<!-- Inter font -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="nav-brand">ChingMu Dataset</div>
+  <div class="nav-links">
+    <a href="#trailer">Trailer</a>
+    <a href="#about">About</a>
+    <a href="#scenarios">Scenarios</a>
+    <a href="#modalities">Modalities</a>
+    <a href="#pipeline">Pipeline</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+
+  <!-- 背景视频（优先）: 换成 assets/trailer.mp4 或其他 hero.mp4 -->
+  <!-- 如果视频加载慢，加 poster="assets/poster.jpg" -->
+  <video class="hero-bg-video" autoplay muted loop playsinline preload="auto"
+         src="jibengongjia.mp4" poster="assets/og-image.jpg">
+  </video>
+
+  <div class="hero-inner">
+    <div class="hero-badge">Embodied AI · Motion Capture · Humanoid Ready</div>
+
+    <h1>
+      ChingMu 1000-Hour<br/>Embodied Motion Dataset
+      <span>青瞳 1000 小时具身智能动作数据集</span>
+    </h1>
+
+    <p class="hero-sub">
+      面向人形机器人、灵巧手、具身 AI 和虚拟制作的高精度多模态动作数据。<br/>
+      覆盖全身运动、手指精细动作、物体 6D 位姿、多视角视频及机器人训练格式。
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">1000+ hrs</div><div class="lbl">Motion Capture</div></div>
+      <div class="hero-stat"><div class="num">15+ Scenarios</div><div class="lbl">Real-world</div></div>
+      <div class="hero-stat"><div class="num">500+ Tasks</div><div class="lbl">Human &amp; Robot</div></div>
+      <div class="hero-stat"><div class="num">1000+ Objects</div><div class="lbl">Tools · Props · Daily</div></div>
+    </div>
+
+    <div class="hero-btns">
+      <a href="#trailer" class="btn btn-primary">View Dataset</a>
+      <a href="#contact"  class="btn btn-outline">Request Sample</a>
+      <a href="#pipeline"  class="btn btn-outline">Documentation</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== TRAILER ===== -->
+<section id="trailer">
+  <div class="container center">
+    <div class="section-label">Overview</div>
+    <h2>Dataset Trailer</h2>
+    <p class="lead">
+      45–90s 总览片：动捕棚全景 → 演员采集 → 手指精细动作 → 物体刚体追踪 → 骨骼实时显示 → 机器人重定向 → 多场景蒙太奇。
+    </p>
+    <div class="video-block">
+      <!-- 换成你的 trailer.mp4 -->
+      <video controls preload="none" poster="assets/og-image.jpg"
+             src="jibengongjia.mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== ABSTRACT / ABOUT ===== -->
+<section id="about" class="bg-light">
+  <div class="container">
+    <div class="section-label">Abstract</div>
+    <h2>About the Dataset</h2>
+    <p class="lead">
+      <strong>ChingMu 1000-Hour Embodied Motion Dataset</strong> 是一个面向人形机器人、灵巧手、具身 AI 和虚拟制作构建的
+      <strong>高精度、多模态、可复现动作数据基础设施</strong>。<br/><br/>
+      数据通过光学动作捕捉系统采集，覆盖人体全身运动、手指精细动作、物体 6D 位姿、多视角视频、任务标签和质量检测报告；
+      场景覆盖工业制造、家庭服务、商超零售、医疗康养、物流仓储、农业食品与文娱表演等典型应用。<br/><br/>
+      通过标准化采集、自动化清洗标注、机器人重定向和质量评估流程，为
+      <strong>模仿学习、动作生成、仿真训练与真实机器人部署</strong>提供高质量数据底座。
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="val">700h+</div><div class="desc">光学动捕核心数据（对标生产级）</div></div>
+      <div class="stat-box"><div class="val">6DoF</div><div class="desc">物体刚体追踪（道具/工具/商品）</div></div>
+      <div class="stat-box"><div class="val">Multi-view</div><div class="desc">同步多视角视频（对齐 mocap 帧时钟）</div></div>
+      <div class="stat-box"><div class="val">Robot-ready</div><div class="desc">人形/灵巧手重定向 + 质量报告</div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== SCENARIOS ===== -->
+<section id="scenarios">
+  <div class="container center">
+    <div class="section-label">Scenarios</div>
+    <h2>15+ Real-World Scenarios</h2>
+    <p class="lead">工业制造 · 家庭服务 · 商超零售 · 医疗康养 · 物流仓储 · 农业食品 · 文娱表演 —— 任务覆盖日常操作到高动态全身运动。</p>
+
+    <!-- 可选：场景蒙太奇视频 -->
+    <div class="video-block">
+      <video controls preload="none" poster="assets/og-image.jpg"
+             src="jibengongjia.mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== MODALITIES ===== -->
+<section id="modalities" class="bg-light">
+  <div class="container">
+    <div class="section-label">Data Modalities</div>
+    <h2>What's Inside the Dataset</h2>
+
+    <div class="card-grid">
+      <!-- Card 1 -->
+      <div class="card">
+        <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
+        <div class="card-body">
+          <div class="tag">Finger Motion</div>
+          <h3>手指精细动作</h3>
+          <p>捏、抓、拧、插拔、按键、镊子/螺丝刀/剪刀工具使用，适配灵巧手训练数据格式。</p>
+        </div>
+      </div>
+      <!-- Card 2 -->
+      <div class="card">
+        <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
+        <div class="card-body">
+          <div class="tag">Object 6D Pose</div>
+          <h3>物体位姿与刚体追踪</h3>
+          <p>人手、道具、商品在同一坐标系同步采集，输出每帧 6DoF pose + bounding info。</p>
+        </div>
+      </div>
+      <!-- Card 3 -->
+      <div class="card">
+        <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
+        <div class="card-body">
+          <div class="tag">Robot Retargeting</div>
+          <h3>面向机器人的重定向数据</h3>
+          <p>Human→Robot skeleton retargeting + MuJoCo/Isaac 仿真校验 + 滑步/穿模/抖动质量报告。</p>
+        </div>
+      </div>
+      <!-- Card 4 -->
+      <div class="card">
+        <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
+        <div class="card-body">
+          <div class="tag">Multi-view Video</div>
+          <h3>多视角同步视频</h3>
+          <p>与 mocap 帧时钟对齐的多机位影像，可作为视觉模型输入 / 虚实对照 / 质量校验。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== DATA PIPELINE ===== -->
+<section id="pipeline">
+  <div class="container center">
+    <div class="section-label">Data Pipeline</div>
+    <h2>Data Capture &amp; Release System</h2>
+    <p class="lead">从场景设计到数据集发布，每一步可审计、可复现。</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">Scenario<br/>Design</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Optical<br/>Motion Capture</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Finger &amp; Object<br/>Tracking</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Multi-view<br/>Video Sync</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Cleaning &amp;<br/>Annotation</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Robot<br/>Retargeting</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Quality<br/>Assessment</div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">Dataset<br/>Release</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== QUALITY / SAMPLE ACCESS ===== -->
+<section id="quality" class="bg-light">
+  <div class="container center">
+    <div class="section-label">Quality &amp; Access</div>
+    <h2>Data Quality &amp; Sample Access</h2>
+    <p class="lead">
+      每份 release 附带质检报告：掉帧率、marker swap 修正记录、刚体追踪置信度、重定向穿模/滑步指标。<br/>
+      可申请脱敏样例包（含骨骼序列 + 标定说明 + 读取脚本），用于评估是否匹配你的训练栈。
+    </p>
+    <div style="margin-top:1.6rem">
+      <a href="#contact" class="btn" style="background:#111;color:#fff;border:none;">Request Sample Access</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== CONTACT ===== -->
+<section id="contact">
+  <div class="container center">
+    <div class="section-label">Contact</div>
+    <h2>Partnership &amp; Custom Capture</h2>
+    <p class="lead">
+      定制采集 · 数采中心方案 · 长期数据订阅 · 机器人格式适配（MuJoCo / Isaac / URDF）<br/>
+      📧  <a href="mailto:data@chingmu.com" style="color:#111;text-decoration:underline">data@chingmu.com</a>
+    </p>
+  </div>
+</section>
+
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  © 2026 ChingMu Inc. · Qingpin 1000-Hour Embodied Motion Dataset · <a href="#">Dataset License</a> · <a href="#">Privacy</a>
+</footer>
+
+</body>
+</html>
