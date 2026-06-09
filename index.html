@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<!-- 字符编码与视口设置，保证移动端正常显示 -->
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- 页面标题，会在浏览器标签页显示 -->
 <title>ChingMu 1000-Hour Embodied Motion Dataset</title>
+
+<!-- SEO 描述，搜索引擎结果中显示 -->
 <meta name="description" content="ChingMu 1000-Hour Embodied Motion Dataset — 面向人形机器人、灵巧手、具身AI和虚拟制作的高精度多模态动作数据。" />
 
 <style>
-/* ===== RESET & BASE ===== */
+/* ===== 全局重置 & 基础样式 ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-size: 16px; }
+html { scroll-behavior: smooth; font-size: 16px; }  /* 平滑滚动，基准字号 */
 body {
   font-family: 'Inter', 'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
   color: #1a1a1a; background: #ffffff; line-height: 1.7; -webkit-font-smoothing: antialiased;
 }
-a { color: inherit; text-decoration: none; }
-img, video { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }         /* 链接继承父元素颜色，去掉下划线 */
+img, video { display: block; max-width: 100%; }       /* 图片/视频块状显示，不超过容器宽度 */
 
-/* ===== NAV ===== */
+/* ===== 顶部固定导航栏 ===== */
 nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;   /* 固定在顶部，层级最高 */
+  background: rgba(255,255,255,.92); backdrop-filter: blur(10px); /* 毛玻璃效果 */
   border-bottom: 1px solid #eee;
   display: flex; align-items: center; justify-content: space-between;
   padding: .65rem 2rem;
   font-size: .85rem; letter-spacing: .02em;
 }
-.nav-brand { font-weight: 700; font-size: .95rem; }
-.nav-links { display: flex; gap: 1.4rem; }
+.nav-brand { font-weight: 700; font-size: .95rem; }   /* 左侧品牌名称 */
+.nav-links { display: flex; gap: 1.4rem; }            /* 导航链接水平排列 */
 .nav-links a { color: #555; transition: color .15s; }
 .nav-links a:hover { color: #000; }
 
-/* ===== HERO ===== */
+/* ===== HERO 首屏区域 ===== */
 .hero {
-  position: relative; min-height: 100svh;
+  position: relative; min-height: 100svh;               /* 撑满视口高度 */
   display: flex; align-items: center; justify-content: center;
   text-align: center; overflow: hidden;
   color: #fff;
 }
-/* 背景：优先视频，fallback 用深色渐变 */
+/* 背景视频：绝对定位铺满，作为首屏背景 */
 .hero-bg-video {
   position: absolute; inset: 0; width: 100%; height: 100%;
   object-fit: cover; z-index: 0;
 }
+/* 半透明黑色遮罩，让文字清晰 */
 .hero::after {
   content: ''; position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.72) 100%);
 }
 .hero-inner {
-  position: relative; z-index: 2;
+  position: relative; z-index: 2;                      /* 文字层在遮罩之上 */
   max-width: 860px; padding: 2rem 1.5rem;
 }
+/* 首屏顶部的标签（如 Embodied AI · Motion Capture） */
 .hero-badge {
   display: inline-block;
   border: 1px solid rgba(255,255,255,.45); border-radius: 999px;
@@ -61,10 +68,12 @@ nav {
   font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 800;
   line-height: 1.18; margin-bottom: .6rem;
 }
+/* 副标题（英文下方的小字） */
 .hero h1 span { display: block; font-weight: 400; font-size: .46em; opacity: .82; margin-top: .35rem; letter-spacing: .01em; }
 .hero-sub {
   font-size: 1rem; opacity: .88; max-width: 600px; margin: 0 auto 1.6rem; line-height: 1.65;
 }
+/* 统计数据行（1000+ hrs 等） */
 .hero-stats {
   display: flex; flex-wrap: wrap; justify-content: center; gap: .9rem;
   margin-bottom: 1.8rem;
@@ -76,6 +85,7 @@ nav {
 }
 .hero-stat .num { font-size: 1.35rem; font-weight: 800; }
 .hero-stat .lbl { font-size: .75rem; opacity: .8; margin-top: .15rem; }
+/* 按钮组 */
 .hero-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
 .btn {
   display: inline-flex; align-items: center; gap: .45rem;
@@ -83,37 +93,35 @@ nav {
   cursor: pointer; transition: transform .12s, box-shadow .2s;
 }
 .btn:hover { transform: translateY(-1px); }
-.btn-primary { background: #fff; color: #111; border: none; }
-.btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.55); }
-.btn-outline:hover { border-color: #fff; }
+.btn-primary { background: #fff; color: #111; border: none; }      /* 白色实心按钮 */
+.btn-outline { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.55); } /* 描边按钮 */
 
-/* ===== SECTIONS ===== */
-section { padding: 5.5rem 1.5rem 5rem; }
-.container { max-width: 1080px; margin: 0 auto; }
+/* ===== 通用区块样式 ===== */
+section { padding: 5.5rem 1.5rem 5rem; }          /* 上下内边距 */
+.container { max-width: 1080px; margin: 0 auto; }  /* 内容最大宽度，居中 */
 .section-label {
   font-size: .72rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
   color: #888; margin-bottom: .55rem;
-}
+}                                                   /* 区块顶部小标签（如 Abstract, Scenarios） */
 h2 { font-size: clamp(1.6rem, 3vw, 2.3rem); font-weight: 800; line-height: 1.25; margin-bottom: 1rem; }
 h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: .55rem; }
 p.lead { font-size: 1.08rem; color: #444; max-width: 760px; line-height: 1.75; }
 .center { text-align: center; }
 .center .lead { margin-left: auto; margin-right: auto; }
 
-/* alt bg */
-.bg-light { background: #f8f8fa; }
+.bg-light { background: #f8f8fa; }               /* 浅灰色背景，用于交替区块 */
 
-/* ===== VIDEO CARD (big) ===== */
+/* ===== 视频区块（全宽） ===== */
 .video-block { margin-top: 2.2rem; }
 .video-block video {
   width: 100%; border-radius: 12px; background: #000; aspect-ratio: 16/9;
   object-fit: cover;
 }
 
-/* ===== GRID CARDS (2-col) ===== */
+/* ===== 卡片网格（两列自适应） ===== */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));  /* 自动适应列数，最少320px */
   gap: 1.6rem; margin-top: 2rem;
 }
 .card {
@@ -130,7 +138,7 @@ p.lead { font-size: 1.08rem; color: #444; max-width: 760px; line-height: 1.75; }
 }
 .card-body p { font-size: .9rem; color: #555; line-height: 1.6; }
 
-/* ===== PIPELINE ===== */
+/* ===== 数据流水线（箭头连接步骤） ===== */
 .pipeline {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: .4rem; margin: 2rem 0 1rem;
@@ -142,7 +150,7 @@ p.lead { font-size: 1.08rem; color: #444; max-width: 760px; line-height: 1.75; }
 }
 .pipeline-arrow { color:#bbb; font-size:1.2rem; }
 
-/* ===== STAT ROW ===== */
+/* ===== 统计框（用于 About 区域） ===== */
 .stat-row {
   display: flex; flex-wrap: wrap; gap: 1.2rem; margin-top: 1.8rem;
 }
@@ -154,14 +162,14 @@ p.lead { font-size: 1.08rem; color: #444; max-width: 760px; line-height: 1.75; }
 .stat-box .val { font-size:1.7rem; font-weight:800; color:#111; }
 .stat-box .desc { font-size:.82rem; color:#666; margin-top:.2rem; }
 
-/* ===== FOOTER ===== */
+/* ===== 页脚 ===== */
 footer {
   background:#111; color:#aaa; font-size:.8rem;
   padding:2.5rem 1.5rem; text-align:center; line-height:1.7;
 }
 footer a { color:#ccc; text-decoration:underline; }
 
-/* ===== RESPONSIVE ===== */
+/* ===== 响应式：小屏幕适配 ===== */
 @media(max-width:640px){
   nav { padding:.55rem 1rem; }
   .nav-links { gap:.8rem; font-size:.78rem; }
@@ -169,14 +177,14 @@ footer a { color:#ccc; text-decoration:underline; }
 }
 </style>
 
-<!-- Inter font -->
+<!-- 引入 Inter 字体（Google Fonts） -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
 </head>
 
 <body>
 
-<!-- ===== NAV ===== -->
+<!-- ===== 导航栏 ===== -->
 <nav>
   <div class="nav-brand">ChingMu Dataset</div>
   <div class="nav-links">
@@ -189,28 +197,31 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </nav>
 
-<!-- ===== HERO ===== -->
+<!-- ===== HERO 首屏 ===== -->
 <section class="hero" id="home">
 
-  <!-- 背景视频（优先）: 换成 assets/trailer.mp4 或其他 hero.mp4 -->
-  <!-- 如果视频加载慢，加 poster="assets/poster.jpg" -->
+  <!-- 背景视频：自动播放、静音、循环 -->
   <video class="hero-bg-video" autoplay muted loop playsinline preload="auto"
          src="jibengongjia.mp4" poster="assets/og-image.jpg">
   </video>
 
   <div class="hero-inner">
+    <!-- 顶部小标签 -->
     <div class="hero-badge">Embodied AI · Motion Capture · Humanoid Ready</div>
 
+    <!-- 主标题 + 副标题 -->
     <h1>
       ChingMu 1000-Hour<br/>Embodied Motion Dataset
       <span>青瞳 1000 小时具身智能动作数据集</span>
     </h1>
 
+    <!-- 简介文字 -->
     <p class="hero-sub">
       面向人形机器人、灵巧手、具身 AI 和虚拟制作的高精度多模态动作数据。<br/>
       覆盖全身运动、手指精细动作、物体 6D 位姿、多视角视频及机器人训练格式。
     </p>
 
+    <!-- 统计数据 -->
     <div class="hero-stats">
       <div class="hero-stat"><div class="num">1000+ hrs</div><div class="lbl">Motion Capture</div></div>
       <div class="hero-stat"><div class="num">15+ Scenarios</div><div class="lbl">Real-world</div></div>
@@ -218,6 +229,7 @@ footer a { color:#ccc; text-decoration:underline; }
       <div class="hero-stat"><div class="num">1000+ Objects</div><div class="lbl">Tools · Props · Daily</div></div>
     </div>
 
+    <!-- 按钮组 -->
     <div class="hero-btns">
       <a href="#trailer" class="btn btn-primary">View Dataset</a>
       <a href="#contact"  class="btn btn-outline">Request Sample</a>
@@ -226,17 +238,16 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== TRAILER ===== -->
+<!-- ===== Trailer 区块 ===== -->
 <section id="trailer">
   <div class="container center">
     <div class="section-label">Overview</div>
     <h2>Dataset Trailer</h2>
     <p class="lead">
-      45–90s 总览片：动捕棚全景 → 演员采集 → 手指精细动作 → 物体刚体追踪 → 骨骼实时显示 → 机器人重定向 → 多场景蒙太奇。
+      动捕棚全景 → 演员采集 → 手指精细动作 → 物体刚体追踪 → 骨骼实时显示 → 机器人重定向 → 多场景蒙太奇
     </p>
+    <!-- 主视频，用户可控制播放 -->
     <div class="video-block">
-      <!-- 换成你的 trailer.mp4 -->
       <video controls preload="none" poster="assets/og-image.jpg"
              src="jibengongjia.mp4">
       </video>
@@ -244,8 +255,7 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== ABSTRACT / ABOUT ===== -->
+<!-- ===== About / Abstract 区块 ===== -->
 <section id="about" class="bg-light">
   <div class="container">
     <div class="section-label">Abstract</div>
@@ -259,6 +269,7 @@ footer a { color:#ccc; text-decoration:underline; }
       <strong>模仿学习、动作生成、仿真训练与真实机器人部署</strong>提供高质量数据底座。
     </p>
 
+    <!-- 四个统计框 -->
     <div class="stat-row">
       <div class="stat-box"><div class="val">700h+</div><div class="desc">光学动捕核心数据（对标生产级）</div></div>
       <div class="stat-box"><div class="val">6DoF</div><div class="desc">物体刚体追踪（道具/工具/商品）</div></div>
@@ -268,15 +279,13 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== SCENARIOS ===== -->
+<!-- ===== Scenarios 场景区块 ===== -->
 <section id="scenarios">
   <div class="container center">
     <div class="section-label">Scenarios</div>
     <h2>15+ Real-World Scenarios</h2>
     <p class="lead">工业制造 · 家庭服务 · 商超零售 · 医疗康养 · 物流仓储 · 农业食品 · 文娱表演 —— 任务覆盖日常操作到高动态全身运动。</p>
-
-    <!-- 可选：场景蒙太奇视频 -->
+    <!-- 场景蒙太奇视频 -->
     <div class="video-block">
       <video controls preload="none" poster="assets/og-image.jpg"
              src="jibengongjia.mp4">
@@ -285,24 +294,24 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== MODALITIES ===== -->
+<!-- ===== Modalities 数据类型区块 ===== -->
 <section id="modalities" class="bg-light">
   <div class="container">
     <div class="section-label">Data Modalities</div>
     <h2>What's Inside the Dataset</h2>
 
+    <!-- 卡片网格，展示四种数据类型 -->
     <div class="card-grid">
-      <!-- Card 1 -->
+      <!-- Card 1: Finger Motion -->
       <div class="card">
-        <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
+        <video muted loop autoplay playsinline preload="auto" src="assets/finger.mp4" poster="assets/og-image.jpg"></video>
         <div class="card-body">
           <div class="tag">Finger Motion</div>
           <h3>手指精细动作</h3>
           <p>捏、抓、拧、插拔、按键、镊子/螺丝刀/剪刀工具使用，适配灵巧手训练数据格式。</p>
         </div>
       </div>
-      <!-- Card 2 -->
+      <!-- Card 2: Object 6D Pose -->
       <div class="card">
         <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
         <div class="card-body">
@@ -311,7 +320,7 @@ footer a { color:#ccc; text-decoration:underline; }
           <p>人手、道具、商品在同一坐标系同步采集，输出每帧 6DoF pose + bounding info。</p>
         </div>
       </div>
-      <!-- Card 3 -->
+      <!-- Card 3: Robot Retargeting -->
       <div class="card">
         <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
         <div class="card-body">
@@ -320,7 +329,7 @@ footer a { color:#ccc; text-decoration:underline; }
           <p>Human→Robot skeleton retargeting + MuJoCo/Isaac 仿真校验 + 滑步/穿模/抖动质量报告。</p>
         </div>
       </div>
-      <!-- Card 4 -->
+      <!-- Card 4: Multi-view Video -->
       <div class="card">
         <video muted loop autoplay playsinline preload="auto" src="jibengongjia.mp4" poster="assets/og-image.jpg"></video>
         <div class="card-body">
@@ -333,14 +342,14 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== DATA PIPELINE ===== -->
+<!-- ===== Data Pipeline 数据流水线区块 ===== -->
 <section id="pipeline">
   <div class="container center">
     <div class="section-label">Data Pipeline</div>
     <h2>Data Capture &amp; Release System</h2>
     <p class="lead">从场景设计到数据集发布，每一步可审计、可复现。</p>
 
+    <!-- 用箭头连接的步骤条 -->
     <div class="pipeline">
       <div class="pipeline-step">Scenario<br/>Design</div>
       <div class="pipeline-arrow">→</div>
@@ -361,8 +370,7 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== QUALITY / SAMPLE ACCESS ===== -->
+<!-- ===== Quality & Access 区块 ===== -->
 <section id="quality" class="bg-light">
   <div class="container center">
     <div class="section-label">Quality &amp; Access</div>
@@ -377,8 +385,7 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== CONTACT ===== -->
+<!-- ===== Contact 联系方式区块 ===== -->
 <section id="contact">
   <div class="container center">
     <div class="section-label">Contact</div>
@@ -390,8 +397,7 @@ footer a { color:#ccc; text-decoration:underline; }
   </div>
 </section>
 
-
-<!-- ===== FOOTER ===== -->
+<!-- ===== 页脚 ===== -->
 <footer>
   © 2026 ChingMu Inc. · Qingpin 1000-Hour Embodied Motion Dataset · <a href="#">Dataset License</a> · <a href="#">Privacy</a>
 </footer>
