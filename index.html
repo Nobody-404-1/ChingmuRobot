@@ -134,7 +134,7 @@ p.lead { font-size: 1.08rem; color: #374151; max-width: 760px; line-height: 1.75
 /* ===== 卡片网格（两列自适应） ===== */
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));  /* 自动适应列数，最少320px */
+  grid-template-columns: repeat(4, 1fr);  /* 自动适应列数，最少320px */
   gap: 1.6rem; margin-top: 2rem;
 }
 .card {
@@ -184,10 +184,30 @@ footer {
 footer a { color:#93c5fd; text-decoration:underline; }
 
 /* ===== 响应式：小屏幕适配 ===== */
+@media(max-width:1024px){
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr); /* 平板端：两列布局 */
+  }
+}
+
 @media(max-width:640px){
-  nav { padding:.55rem 1rem; }
-  .nav-links { gap:.8rem; font-size:.78rem; }
-  section { padding:4rem 1rem 3.5rem; }
+  nav { 
+    padding: 0.8rem 1rem; /* 移动端保持合适内边距 */
+    height: 56px; /* 移动端稍矮 */
+  }
+  .nav-links { 
+    gap: .8rem; 
+    font-size: .8rem; /* 移动端字体稍小 */
+  }
+  .hero {
+    padding-top: 56px; /* 移动端调整顶部内边距 */
+  }
+  section { padding: 4rem 1rem 3.5rem; }
+  .pipeline-step { font-size: .75rem; padding: .6rem .9rem; }
+  .stat-box { min-width: 100%; }
+  .card-grid {
+    grid-template-columns: 1fr; /* 移动端：单列布局 */
+  }
 }
 </style>
 
@@ -262,7 +282,7 @@ footer a { color:#93c5fd; text-decoration:underline; }
     </p>
     <!-- 主视频，用户可控制播放 -->
     <div class="video-block">
-      <video controls preload="none" poster="assets/og-image.jpg"
+       <video autoplay muted loop playsinline preload="auto" poster="assets/your-trailer-poster.jpg"
              src="assets/jibengongjia.mp4">
       </video>
     </div>
@@ -301,7 +321,7 @@ footer a { color:#93c5fd; text-decoration:underline; }
     <p class="lead">工业制造 · 家庭服务 · 商超零售 · 医疗康养 · 物流仓储 · 农业食品 · 文娱表演 —— 任务覆盖日常操作到高动态全身运动。</p>
     <!-- 场景蒙太奇视频 -->
     <div class="video-block">
-      <video controls preload="none" poster="assets/og-image.jpg"
+      <video autoplay muted loop playsinline preload="auto" poster="assets/your-scenarios-poster.jpg"
              src="assets/jibengongjia.mp4">
       </video>
     </div>
